@@ -50,4 +50,4 @@ dependencies[] = commerce_tax_ui
 dependencies[] = views_ui
 dependencies[] = rules_scheduler
 dependencies[] = rules_admin
-#dependencies[] = oauth_server_sso
+dependencies[] = oauth_server_sso
