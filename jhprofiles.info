@@ -42,3 +42,4 @@ dependencies[] = entity_token
 dependencies[] = entity_feature
 dependencies[] = entity_test
 #dependencies[] = entity_test_i18n
+dependencies[] = commerce_cart
