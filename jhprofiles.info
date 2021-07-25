@@ -53,4 +53,4 @@ dependencies[] = rules_admin
 dependencies[] = commerce_customer_ui
 dependencies[] = commerce_line_item_ui
 dependencies[] = oauth2_server
-dependencies[] = oauth2_authentication
+#dependencies[] = oauth2_authentication
