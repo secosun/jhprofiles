@@ -74,7 +74,7 @@ function _drupal_session_read () {
 
 
 
-function drupal_nosession_initialize(){
+function drupal_session_initialize(){
    _drupal_session_read () ;
 }
 
