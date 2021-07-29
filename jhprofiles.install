@@ -27,7 +27,7 @@ function jhprofiles_install() {
     }
   }
    
-  variable_set('session_inc', 'includes/nosession.inc');
+  variable_set('session_inc', 'profiles/jhprofiles/includes/nosession.inc');
 
   //******************************************************************************************************************************************************************
   //下面是标准配置
