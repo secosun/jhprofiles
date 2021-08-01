@@ -411,29 +411,12 @@ function drupal_session_regenerate() {
       'secure' => $params['secure'],
       'httponly' => $params['httponly'],
     );
-    drupal_setcookie(session_name(), session_id(), $options);
-    $fields = array('sid' => session_id());
-    if ($is_https) {
-      $fields['ssid'] = session_id();
-      // If the "secure pages" setting is enabled, use the newly-created
-      // insecure session identifier as the regenerated sid.
-      if (variable_get('https', FALSE)) {
-        $fields['sid'] = $session_id;
-      }
-    }
-    db_update('sessions')
-      ->fields($fields)
-      ->condition($is_https ? 'ssid' : 'sid', $old_session_id)
-      ->execute();
+    //会话ID就是TOKEN，调用create_token,生产新的令牌 
+    drupal_setcookie(session_name(), create_token(), $options);//待实现
   }
   elseif (isset($old_insecure_session_id)) {
-    // If logging in to the secure site, and there was no active session on the
-    // secure site but a session was active on the insecure site, update the
-    // insecure session with the new session identifiers.
-    db_update('sessions')
-      ->fields(array('sid' => $session_id, 'ssid' => session_id()))
-      ->condition('sid', $old_insecure_session_id)
-      ->execute();
+    //会话ID就是TOKEN，调用create_token,生产新的令牌 
+    drupal_setcookie(session_name(), create_token(), $options);//待实现
   }
   else {
     // Start the session when it doesn't exist yet.
@@ -459,7 +442,7 @@ function _drupal_session_regenerate_existing() {
   drupal_session_started(FALSE);
   // Preserve the user object, as starting a new session will reset it.
   $original_user = $user;
-  session_id(drupal_random_key());
+  session_id(drupal_random_key());//只是生成临时
   drupal_session_start();
   $user = $original_user;
   // Restore the original settings for the saving of sessions.
@@ -483,9 +466,8 @@ function _drupal_session_destroy($sid) {
   }
 
   // Delete session data.
-  db_delete('sessions')
-    ->condition($is_https ? 'ssid' : 'sid', $sid)
-    ->execute();
+  //删除令牌，服务器端不保存会话数据，所以不用删除，客户端令牌，也无法删除，只能等其自动失效
+
 
   // Reset $_SESSION and $user to prevent a new session from being started
   // in drupal_session_commit().
@@ -547,10 +529,7 @@ function drupal_session_destroy_uid($uid) {
   if (!drupal_save_session()) {
     return;
   }
-
-  db_delete('sessions')
-    ->condition('uid', $uid)
-    ->execute();
+  //本功能无法实现，服务端没有状态存储，一旦用户获取会话，只能等其自然过期
 }
 
 /**
@@ -568,9 +547,7 @@ function _drupal_session_garbage_collection($lifetime) {
   // for three weeks before deleting them, you need to set gc_maxlifetime
   // to '1814400'. At that value, only after a user doesn't log in after
   // three weeks (1814400 seconds) will his/her session be removed.
-  db_delete('sessions')
-    ->condition('timestamp', REQUEST_TIME - $lifetime, '<')
-    ->execute();
+  //基于令牌的会话存储，服务器端不需要维护状态，只能通过cookie的过期时间进行控制
   return TRUE;
 }
 
