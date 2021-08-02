@@ -108,7 +108,7 @@ function _drupal_session_read () {
    {
        $user_array=array('uid'=>(int)$user_data['sub'],
                      'roles'=>$user_data['roles'],
-                     'hostname' => ip_address()，
+                     'hostname' => ip_address(),
 					 'signature'=>$user_data['signature'],
 					 'name'=>$user_data['username']);
 
