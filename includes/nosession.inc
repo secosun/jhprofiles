@@ -93,7 +93,7 @@ function _drupal_session_read () {
 
   // Otherwise, if the session is still active
   // 恢复令牌中的用户信息
-  require_once DRUPAL_ROOT . '/modules/oauth2_server-7.x-1.7/oauth2_server/oauth2_server.pages.inc';
+  require_once DRUPAL_ROOT . '/sites/all/modules/contrib/oauth2_server/oauth2_server.pages.inc';
   require_once DRUPAL_ROOT . '/includes/common.inc';
   $redirect_url_parts = explode('?', $jwtToken);
   $redirect_url_params = drupal_get_query_array($redirect_url_parts[1]);
