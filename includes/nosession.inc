@@ -412,11 +412,11 @@ function drupal_session_regenerate() {
       'httponly' => $params['httponly'],
     );
     //会话ID就是TOKEN，调用create_token,生产新的令牌 
-    drupal_setcookie(session_name(), create_token(), $options);//待实现
+    //drupal_setcookie(session_name(), create_token(), $options);//待实现
   }
   elseif (isset($old_insecure_session_id)) {
     //会话ID就是TOKEN，调用create_token,生产新的令牌 
-    drupal_setcookie(session_name(), create_token(), $options);//待实现
+    //drupal_setcookie(session_name(), create_token(), $options);//待实现
   }
   else {
     // Start the session when it doesn't exist yet.
