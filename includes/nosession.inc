@@ -103,7 +103,7 @@ function _drupal_session_read () {
       );
   
   
-   $user_data = get_token($tokens);  
+   //$user_data = get_token($tokens);  
    if($user_data!='')  
    {
        $user_array=array('uid'=>(int)$user_data['sub'],
