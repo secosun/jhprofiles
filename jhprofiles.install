@@ -26,8 +26,37 @@ function jhprofiles_install() {
       variable_set($var, $theme);
     }
   }
-   
+ //创建授权服务器，注册client，声明授权范围scope   
+ {
+  "name" : "test3",
+  "label" : "test3",
+  "settings" : {
+    "enforce_state" : true,
+    "default_scope" : "test5",
+    "allow_implicit" : 0,
+    "use_openid_connect" : 0,
+    "use_crypto_tokens" : 1,
+    "grant_types" : {
+      "refresh_token" : "refresh_token",
+      "password" : "password",
+      "authorization_code" : 0,
+      "client_credentials" : 0,
+      "urn:ietf:params:oauth:grant-type:jwt-bearer" : 0
+    },
+    "always_issue_new_refresh_token" : 0,
+    "unset_refresh_token_after_use" : 1,
+    "access_lifetime" : "1209600",
+    "id_lifetime" : "1209600",
+    "refresh_token_lifetime" : "1209600",
+    "require_exact_redirect_uri" : 1
+  },
+  "scopes" : [ { "name" : "test5", "description" : "test5" } ]
+}
   variable_set('session_inc', 'profiles/jhprofiles/includes/nosession.inc');
+  variable_set('oauth2_authentication_token_endpoint', '/oauth2/token');
+  variable_set('oauth2_authentication_client_id', 'jhvegeserver');
+  variable_set('oauth2_authentication_client_secret', 'jhvege888888');
+  variable_set('oauth2_authentication_scope', '');
 
   //******************************************************************************************************************************************************************
   //下面是标准配置
