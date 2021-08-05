@@ -27,7 +27,7 @@ function jhprofiles_install() {
     }
   }
  //创建授权服务器，注册client，声明授权范围scope   
- $exportedentity = {
+ $exportedentity = '{
   "name" : "test3",
   "label" : "test3",
   "settings" : {
@@ -51,11 +51,11 @@ function jhprofiles_install() {
     "require_exact_redirect_uri" : 1
   },
   "scopes" : [ { "name" : "test5", "description" : "test5" } ]
-}
+}';
   
   // register a new user
   $form_state = array();
-  $form_state['values']['import'] = drupal_json_encode($exportedentity);
+  $form_state['values']['import'] = $exportedentity;
   $form_state['values']['overwrite'] = FALSE;
   $form_state['values']['op'] = 'import';
   drupal_form_submit('oauth2_server_operation_form', $form_state);
