@@ -66,6 +66,16 @@ function jhprofiles_install() {
     $client->redirect_uri = 'https://google.com' . "\n" . url('authorized', array('absolute' => TRUE));
     $client->automatic_authorization = TRUE;
     $client->save();
+  
+  //配置第三方客户端
+   variable_set('oauth2_authentication_token_endpoint', '/token');
+   variable_set('oauth2_authentication_client_id',  $client->client_key);
+   variable_set('oauth2_authentication_client_secret',$client->client_secret);
+   variable_set('oauth2_authentication_scope', 'profile');
+   //variable_set('oauth2_authentication_class', $class);
+   variable_set('oauth2_authentication_user_edit_email', TRUE);
+   variable_set('oauth2_authentication_user_edit_password', TRUE);
+
   //$form_state = array();
   //$form_state['values']['import'] = $exportedentity;
   //$form_state['values']['overwrite'] = FALSE;
