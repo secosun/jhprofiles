@@ -27,7 +27,7 @@ function jhprofiles_install() {
     }
   }
  //创建授权服务器，注册client，声明授权范围scope   
- {
+ $exportedentity = {
   "name" : "test3",
   "label" : "test3",
   "settings" : {
@@ -52,11 +52,18 @@ function jhprofiles_install() {
   },
   "scopes" : [ { "name" : "test5", "description" : "test5" } ]
 }
-  variable_set('session_inc', 'profiles/jhprofiles/includes/nosession.inc');
-  variable_set('oauth2_authentication_token_endpoint', '/oauth2/token');
-  variable_set('oauth2_authentication_client_id', 'jhvegeserver');
-  variable_set('oauth2_authentication_client_secret', 'jhvege888888');
-  variable_set('oauth2_authentication_scope', '');
+  
+  // register a new user
+  $form_state = array();
+  $form_state['values']['import'] = drupal_json_encode($exportedentity);
+  $form_state['values']['overwrite'] = FALSE;
+  $form_state['values']['submit'] = t('Import');
+  drupal_form_submit('oauth2_server_operation_form', $form_state);
+  //variable_set('session_inc', 'profiles/jhprofiles/includes/nosession.inc');
+  //variable_set('oauth2_authentication_token_endpoint', '/oauth2/token');
+  //variable_set('oauth2_authentication_client_id', 'jhvegeserver');
+  //variable_set('oauth2_authentication_client_secret', 'jhvege888888');
+  //variable_set('oauth2_authentication_scope', '');
 
   //******************************************************************************************************************************************************************
   //下面是标准配置
