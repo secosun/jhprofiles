@@ -58,7 +58,7 @@ function jhprofiles_install() {
   $form_state['values']['import'] = $exportedentity;
   $form_state['values']['overwrite'] = FALSE;
   $form_state['values']['op'] = 'import';
-  drupal_form_submit('oauth2_server_operation_form', $form_state);
+  drupal_form_submit('OAuth2Server_operation_form', $form_state);
   //variable_set('session_inc', 'profiles/jhprofiles/includes/nosession.inc');
   //variable_set('oauth2_authentication_token_endpoint', '/oauth2/token');
   //variable_set('oauth2_authentication_client_id', 'jhvegeserver');
