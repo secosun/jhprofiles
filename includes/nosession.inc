@@ -195,6 +195,7 @@ function _drupal_session_write($sid, $value) {
       );
      //修改令牌，更新session和时间，待开发
      //$_COOKIE[session_name()] = update_token($fields);
+     static::loadToken('jhvege_client');
      
     }
 
