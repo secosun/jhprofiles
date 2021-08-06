@@ -68,24 +68,16 @@ function jhprofiles_install() {
     $client->save();
   
   //配置第三方客户端
-   variable_set('oauth2_authentication_token_endpoint', '/token');
+   variable_set('oauth2_authentication_token_endpoint', '/oauth2/token');
    variable_set('oauth2_authentication_client_id',  $client->client_key);
    variable_set('oauth2_authentication_client_secret',$client->client_secret);
    variable_set('oauth2_authentication_scope', 'profile');
    //variable_set('oauth2_authentication_class', $class);
    variable_set('oauth2_authentication_user_edit_email', TRUE);
    variable_set('oauth2_authentication_user_edit_password', TRUE);
+  //配置基于token的会话管理技术
+  variable_set('session_inc', 'profiles/jhprofiles/includes/nosession.inc');
 
-  //$form_state = array();
-  //$form_state['values']['import'] = $exportedentity;
-  //$form_state['values']['overwrite'] = FALSE;
-  //$form_state['values']['op'] = 'import';
-  //drupal_form_submit('oauth2_server_operation_form', $form_state);
-  //variable_set('session_inc', 'profiles/jhprofiles/includes/nosession.inc');
-  //variable_set('oauth2_authentication_token_endpoint', '/oauth2/token');
-  //variable_set('oauth2_authentication_client_id', 'jhvegeserver');
-  //variable_set('oauth2_authentication_client_secret', 'jhvege888888');
-  //variable_set('oauth2_authentication_scope', '');
 
   //******************************************************************************************************************************************************************
   //下面是标准配置
