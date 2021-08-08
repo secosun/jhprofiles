@@ -93,7 +93,6 @@ function _drupal_session_read () {
 
   // Otherwise, if the session is still active
   // 恢复令牌中的用户信息
-  require_once DRUPAL_ROOT . '/sites/all/modules/contrib/oauth2_server/oauth2_server.pages.inc';
   require_once DRUPAL_ROOT . '/includes/common.inc';
   $redirect_url_parts = explode('?', $jwtToken);
   $redirect_url_params = drupal_get_query_array($redirect_url_parts[1]);
@@ -103,7 +102,7 @@ function _drupal_session_read () {
       );
   
   
-   //$user_data = get_token($tokens);  
+   $user_data = get_token($tokens);  
    if($user_data!='')  
    {
        $user_array=array('uid'=>(int)$user_data['sub'],
@@ -169,7 +168,6 @@ function _drupal_session_read () {
  */
 function _drupal_session_write($sid, $value) {
   global $user;
-
   // The exception handler is not active at this point, so we need to do it
   // manually.
   try {
@@ -181,7 +179,7 @@ function _drupal_session_write($sid, $value) {
     // Check whether $_SESSION has been changed in this request.
     $last_read = &drupal_static('drupal_session_last_read');
     $is_changed = !isset($last_read) || $last_read['sid'] != $sid || $last_read['value'] !== $value;
-
+ 
     // For performance reasons, do not update the sessions table, unless
     // $_SESSION has changed or more than 180 has passed since the last update.
     if ($is_changed || !isset($user->timestamp) || REQUEST_TIME - $user->timestamp > variable_get('session_write_interval', 180)) {
@@ -194,9 +192,11 @@ function _drupal_session_write($sid, $value) {
         'timestamp' => REQUEST_TIME,
       );
      //修改令牌，更新session和时间，待开发
-     //$_COOKIE[session_name()] = update_token($fields);
-     static::loadToken('jhvege_client');
-     
+     $_COOKIE['jhvege2'] =  $value;
+     require_once DRUPAL_ROOT . '/sites/all/modules/contrib/oauth2_client/oauth2_client.inc;
+     $_COOKIE[session_name()] = OAuth2\Client::loadToken('jhvege_client');
+     //$_SESSION['oauth2_client']['token'][$key]),加载的东西只是session的一部分，其他应用保存的数据可能会丢失
+    
     }
 
     // Likewise, do not update access time more than once per 180 seconds.
@@ -240,7 +240,7 @@ function drupal_session_initialize() {
     // anonymous users not use a session cookie unless something is stored in
     // $_SESSION. This allows HTTP proxies to cache anonymous pageviews.
     drupal_session_start();
-    //认证用户root或者会话为空时页面不可缓存
+    //认证用户root或者会话为非空时页面不可缓存
     if ($user->uid == 1 || !empty($_SESSION)) {
       drupal_page_is_cacheable(FALSE);
     }
@@ -413,11 +413,13 @@ function drupal_session_regenerate() {
       'httponly' => $params['httponly'],
     );
     //会话ID就是TOKEN，调用create_token,生产新的令牌 
-    //drupal_setcookie(session_name(), create_token(), $options);//待实现
+    require_once DRUPAL_ROOT . '/sites/all/modules/contrib/oauth2_client/oauth2_client.inc;
+    drupal_setcookie(session_name(), OAuth2\Client::loadToken('jhvege_client') , $options);//待实现
   }
   elseif (isset($old_insecure_session_id)) {
     //会话ID就是TOKEN，调用create_token,生产新的令牌 
-    //drupal_setcookie(session_name(), create_token(), $options);//待实现
+    require_once DRUPAL_ROOT . '/sites/all/modules/contrib/oauth2_client/oauth2_client.inc;
+    drupal_setcookie(session_name(), OAuth2\Client::loadToken('jhvege_client'), $options);//待实现
   }
   else {
     // Start the session when it doesn't exist yet.
@@ -578,5 +580,39 @@ function drupal_save_session($status = NULL) {
     $save_session = $status;
   }
   return $save_session;
+}
+
+/**
+*获取用户身份信息
+*/
+function parse_token($tokens){
+  require_once DRUPAL_ROOT . '/sites/all/modules/contrib/oauth2_server/oauth2_server.module';
+ // Get parameters from the session, and then clean up.
+  $parameters = array(
+    'destination' => 'user',
+    'op' => 'login',
+    'connect_uid' => NULL,
+  );
+   $destination = $parameters['destination'];
+    // Process the login 
+	
+    if ($tokens) {
+      if ($parameters['op'] === 'login') {
+		list($headerb64, $claims64, $signatureb64) = explode('.', $tokens['id_token']);
+	$claims = json_decode(oauth2_server_base64url_decode($claims64), TRUE);
+	if($claims['exp']< time()){
+	   return '';
+	}
+	$signature = oauth2_server_base64url_decode($signatureb64);
+	$payload = utf8_decode($headerb64 . '.' . $claims64);
+	$keys = oauth2_server_get_keys();
+	 //return $claims;
+    $verified = openssl_verify($payload, $signature, $keys['public_key'], 'sha256');
+    return $verified? $claims:'';
+		
+      // return $user_data = $client->decodeIdToken($tokens['id_token']);
+      
+    }
+  }
 }
 
