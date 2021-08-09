@@ -65,6 +65,7 @@ function jhprofiles_install() {
     // validation passes.
     $client->redirect_uri = 'https://google.com' . "\n" . url('authorized', array('absolute' => TRUE));
     $client->automatic_authorization = TRUE;
+    //urn:ietf:params:oauth:grant-type:jwt-bearer
     $client->save();
   
   //配置第三方客户端
@@ -76,7 +77,7 @@ function jhprofiles_install() {
    variable_set('oauth2_authentication_user_edit_email', TRUE);
    variable_set('oauth2_authentication_user_edit_password', TRUE);
   //配置基于token的会话管理技术
-  variable_set('session_inc', 'profiles/jhprofiles/includes/nosession.inc');
+  //variable_set('session_inc', 'profiles/jhprofiles/includes/nosession.inc');
 
 
   //******************************************************************************************************************************************************************

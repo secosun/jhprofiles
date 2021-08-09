@@ -606,6 +606,7 @@ function parse_token($tokens){
 	$signature = oauth2_server_base64url_decode($signatureb64);
 	$payload = utf8_decode($headerb64 . '.' . $claims64);
 	$keys = oauth2_server_get_keys();
+  //oauth2/certificates
 	 //return $claims;
     $verified = openssl_verify($payload, $signature, $keys['public_key'], 'sha256');
     return $verified? $claims:'';
